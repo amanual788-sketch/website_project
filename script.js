@@ -1,4 +1,6 @@
-// Photo Upload Preview
+// ============================================
+// PHOTO UPLOAD PREVIEW
+// ============================================
 const photoInput = document.getElementById('photoInput');
 const photoPlaceholder = document.querySelector('.photo-placeholder-premium');
 const photoPreviewArea = document.getElementById('photoPreviewArea');
@@ -9,23 +11,11 @@ if (photoInput) {
     photoInput.addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
-            // Validate file size (max 5MB)
-            if (file.size > 5 * 1024 * 1024) {
-                showMessage('Photo size must be less than 5MB', 'error');
-                this.value = '';
-                return;
-            }
-            // Validate file type
-            if (!file.type.startsWith('image/')) {
-                showMessage('Please upload an image file', 'error');
-                this.value = '';
-                return;
-            }
             const reader = new FileReader();
             reader.onload = function(event) {
                 photoPreview.src = event.target.result;
-                photoPlaceholder.style.display = 'none';
-                photoPreviewArea.style.display = 'block';
+                if(photoPlaceholder) photoPlaceholder.style.display = 'none';
+                if(photoPreviewArea) photoPreviewArea.style.display = 'block';
             };
             reader.readAsDataURL(file);
         }
@@ -34,13 +24,15 @@ if (photoInput) {
     if (removePhotoBtn) {
         removePhotoBtn.addEventListener('click', function() {
             photoInput.value = '';
-            photoPlaceholder.style.display = 'flex';
-            photoPreviewArea.style.display = 'none';
+            if(photoPlaceholder) photoPlaceholder.style.display = 'flex';
+            if(photoPreviewArea) photoPreviewArea.style.display = 'none';
         });
     }
 }
 
-// Sync name placeholder with full name field
+// ============================================
+// SYNC NAME PLACEHOLDER WITH FULL NAME
+// ============================================
 const namePlaceholder = document.getElementById('applicantNamePlaceholder');
 const fullNameField = document.getElementById('fullName');
 
@@ -54,136 +46,138 @@ if (namePlaceholder && fullNameField) {
     });
 }
 
-// Set default form date to today
-const formDateField = document.getElementById('formDate');
-if (formDateField) {
-    const today = new Date().toISOString().split('T')[0];
-    formDateField.value = today;
+// ============================================
+// SHOW MESSAGE FUNCTION
+// ============================================
+function showMessage(message, type) {
+    const msgDiv = document.getElementById('message');
+    if (!msgDiv) return;
+    
+    msgDiv.textContent = message;
+    msgDiv.className = `message-toast ${type}`;
+    msgDiv.style.display = 'block';
+    
+    // Auto hide after 5 seconds
+    setTimeout(() => {
+        msgDiv.style.display = 'none';
+    }, 5000);
 }
 
-// Form Submission
+// ============================================
+// FORM SUBMISSION - WITH SUCCESS MESSAGE
+// ============================================
 const form = document.getElementById('registrationForm');
 if (form) {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        // Validate required fields
-        const fullName = document.getElementById('fullName').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        const nationality = document.getElementById('nationality').value.trim();
-        const declaration = document.getElementById('declarationCheckbox');
-        
-        if (!fullName) {
-            showMessage('Please enter your full name', 'error');
-            document.getElementById('fullName').focus();
-            return;
-        }
-        
-        if (!phone) {
-            showMessage('Please enter your phone number', 'error');
-            document.getElementById('phone').focus();
-            return;
-        }
-        
-        if (!nationality) {
-            showMessage('Please enter your nationality', 'error');
-            document.getElementById('nationality').focus();
-            return;
-        }
-        
-        if (!declaration.checked) {
-            showMessage('Please confirm the declaration', 'error');
-            return;
-        }
-        
-        // Get numeric values as numbers (not strings)
-        let height = document.getElementById('height').value;
-        let weight = document.getElementById('weight').value;
-        let age = document.getElementById('age').value;
-        
-        // Convert to numbers
-        height = height ? parseFloat(height) : null;
-        weight = weight ? parseFloat(weight) : null;
-        age = age ? parseInt(age) : null;
-        
-        const formData = {
-            applicant: {
-                fullName: fullName,
-                address: document.getElementById('address').value || '',
-                nationality: nationality,
-                age: age,
-                dateOfBirth: document.getElementById('dob').value || '',
-                placeOfBirth: document.getElementById('birthPlace').value || '',
-                occupation: document.getElementById('occupation').value || '',
-                idNumber: document.getElementById('idNumber').value || '',
-                formDate: document.getElementById('formDate').value || '',
-                weight: weight,
-                height: height,
-                phone: phone
-            },
-            nextOfKin: {
-                name: document.getElementById('kinName').value || '',
-                address: document.getElementById('kinAddress').value || '',
-                region: document.getElementById('kinRegion').value || '',
-                subcity: document.getElementById('kinSubcity').value || '',
-                nationality: document.getElementById('kinNationality').value || '',
-                idNumber: document.getElementById('kinIdNumber').value || '',
-                phone: document.getElementById('kinPhone').value || ''
-            },
-            signature: {
-                applicantSignature: document.getElementById('applicantSignature').value || '',
-                witnessSignature: document.getElementById('witnessSignature').value || ''
-            }
-        };
-        
-        const submitData = new FormData();
-        submitData.append('formData', JSON.stringify(formData));
-        const photoFile = document.getElementById('photoInput').files[0];
-        if (photoFile) submitData.append('photo', photoFile);
-        
-        const submitBtn = document.querySelector('.submit-btn-glow');
-        const originalText = submitBtn.innerHTML;
+        // Show loading state
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
         submitBtn.disabled = true;
         
+        // Collect form data
+        const formData = {
+            applicant: {
+                fullName: document.getElementById('fullName')?.value || '',
+                address: document.getElementById('address')?.value || '',
+                nationality: document.getElementById('nationality')?.value || '',
+                age: document.getElementById('age')?.value || '',
+                dateOfBirth: document.getElementById('dob')?.value || '',
+                placeOfBirth: document.getElementById('birthPlace')?.value || '',
+                occupation: document.getElementById('occupation')?.value || '',
+                idNumber: document.getElementById('idNumber')?.value || '',
+                formDate: document.getElementById('formDate')?.value || '',
+                weight: document.getElementById('weight')?.value || '',
+                height: document.getElementById('height')?.value || '',
+                phone: document.getElementById('phone')?.value || ''
+            },
+            nextOfKin: {
+                name: document.getElementById('kinName')?.value || '',
+                address: document.getElementById('kinAddress')?.value || '',
+                region: document.getElementById('kinRegion')?.value || '',
+                subcity: document.getElementById('kinSubcity')?.value || '',
+                nationality: document.getElementById('kinNationality')?.value || '',
+                idNumber: document.getElementById('kinIdNumber')?.value || '',
+                phone: document.getElementById('kinPhone')?.value || ''
+            },
+            signature: {
+                applicantSignature: document.getElementById('applicantSignature')?.value || '',
+                witnessSignature: document.getElementById('witnessSignature')?.value || ''
+            }
+        };
+        
+        // Validate declaration
+        const declaration = document.getElementById('declarationCheckbox');
+        if (!declaration || !declaration.checked) {
+            showMessage('⚠️ Please confirm that the information provided is true and accurate', 'error');
+            submitBtn.innerHTML = originalBtnText;
+            submitBtn.disabled = false;
+            return;
+        }
+        
+        // Validate required fields
+        if (!formData.applicant.fullName) {
+            showMessage('⚠️ Please enter your full name', 'error');
+            submitBtn.innerHTML = originalBtnText;
+            submitBtn.disabled = false;
+            return;
+        }
+        
+        if (!formData.applicant.phone) {
+            showMessage('⚠️ Please enter your phone number', 'error');
+            submitBtn.innerHTML = originalBtnText;
+            submitBtn.disabled = false;
+            return;
+        }
+        
+        // Prepare FormData for file upload
+        const submitData = new FormData();
+        submitData.append('formData', JSON.stringify(formData));
+        
+        const photoFile = document.getElementById('photoInput')?.files[0];
+        if (photoFile) {
+            submitData.append('photo', photoFile);
+        }
+        
         try {
-            const response = await fetch('/api/register', { 
-                method: 'POST', 
-                body: submitData 
+            // Send to server
+            const response = await fetch('/api/register', {
+                method: 'POST',
+                body: submitData
             });
             
             const result = await response.json();
             
-            if (result.success) {
-                showMessage(`✅ Registration Successful! Application ID: ${result.applicationId}`, 'success');
+            if (response.ok && result.success) {
+                // SUCCESS MESSAGE - Registration Successful!
+                showMessage(`✅ REGISTRATION SUCCESSFUL! Application ID: ${result.applicationId}. We will contact you within 3-5 business days.`, 'success');
+                
+                // Reset form
                 form.reset();
-                if (photoPreviewArea) photoPreviewArea.style.display = 'none';
+                
+                // Reset photo upload
+                if (photoInput) photoInput.value = '';
                 if (photoPlaceholder) photoPlaceholder.style.display = 'flex';
+                if (photoPreviewArea) photoPreviewArea.style.display = 'none';
                 if (namePlaceholder) namePlaceholder.value = '';
-                // Reset form date to today
-                if (formDateField) formDateField.value = today;
+                
+                // Scroll to top to show message
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+                
             } else {
-                showMessage('❌ Error: ' + (result.error || 'Unknown error'), 'error');
+                showMessage('❌ Submission failed: ' + (result.error || 'Unknown error'), 'error');
             }
         } catch (error) {
-            console.error('Network error:', error);
-            showMessage('❌ Network error. Please check your internet connection and try again.', 'error');
+            console.error('Error:', error);
+            showMessage('❌ Network error. Please check your connection and try again.', 'error');
         } finally {
-            submitBtn.innerHTML = originalText;
+            // Restore button
+            submitBtn.innerHTML = originalBtnText;
             submitBtn.disabled = false;
         }
     });
-}
-
-function showMessage(msg, type) {
-    const msgDiv = document.getElementById('message');
-    msgDiv.className = `message-toast ${type}`;
-    msgDiv.innerHTML = msg;
-    msgDiv.style.display = 'block';
-    setTimeout(() => {
-        msgDiv.style.display = 'none';
-    }, 8000);
 }
 
 // ============================================
@@ -196,16 +190,11 @@ async function loadApplications() {
         const result = await response.json();
         if (result.success) {
             displayApplications(result.data);
-            document.getElementById('totalCount').innerText = result.data.length;
-        } else {
-            console.error('Failed to load:', result.error);
+            const totalCount = document.getElementById('totalCount');
+            if (totalCount) totalCount.innerText = result.data.length;
         }
     } catch (error) {
         console.error('Error loading applications:', error);
-        const tbody = document.getElementById('tableBody');
-        if (tbody) {
-            tbody.innerHTML = '<tr><td colspan="7" class="loading-cell">Error loading applications. Please refresh.</td></tr>';
-        }
     }
 }
 
@@ -225,7 +214,7 @@ function displayApplications(data) {
             <td>${app.applicant?.phone || '-'}</td>
             <td>${app.applicant?.nationality || '-'}</td>
             <td>${new Date(app.createdAt).toLocaleDateString()}</td>
-            <td>${app.photo ? '<i class="fas fa-check-circle" style="color:#10B981"></i> Yes' : '<i class="fas fa-times-circle" style="color:#EF4444"></i> No'}</td>
+            <td>${app.photo ? '<i class="fas fa-check-circle" style="color:#10B981"></i>' : '<i class="fas fa-times-circle" style="color:#EF4444"></i>'}</td>
             <td class="action-buttons">
                 <button class="view-btn" onclick="viewDetails('${app._id}')"><i class="fas fa-eye"></i></button>
                 <button class="delete-btn" onclick="deleteApp('${app._id}')"><i class="fas fa-trash"></i></button>
@@ -242,28 +231,21 @@ async function viewDetails(id) {
         
         if (app) {
             const modalBody = document.getElementById('modalBody');
-            modalBody.innerHTML = `
-                <div class="detail-row"><div class="detail-label">Application ID:</div><div>${app.applicationId}</div></div>
-                <div class="detail-row"><div class="detail-label">Full Name:</div><div>${app.applicant?.fullName || '-'}</div></div>
-                <div class="detail-row"><div class="detail-label">Address:</div><div>${app.applicant?.address || '-'}</div></div>
-                <div class="detail-row"><div class="detail-label">Nationality:</div><div>${app.applicant?.nationality || '-'}</div></div>
-                <div class="detail-row"><div class="detail-label">Age:</div><div>${app.applicant?.age || '-'}</div></div>
-                <div class="detail-row"><div class="detail-label">Date of Birth:</div><div>${app.applicant?.dateOfBirth || '-'}</div></div>
-                <div class="detail-row"><div class="detail-label">Place of Birth:</div><div>${app.applicant?.placeOfBirth || '-'}</div></div>
-                <div class="detail-row"><div class="detail-label">Occupation:</div><div>${app.applicant?.occupation || '-'}</div></div>
-                <div class="detail-row"><div class="detail-label">ID Number:</div><div>${app.applicant?.idNumber || '-'}</div></div>
-                <div class="detail-row"><div class="detail-label">Phone:</div><div>${app.applicant?.phone || '-'}</div></div>
-                <div class="detail-row"><div class="detail-label">Weight:</div><div>${app.applicant?.weight ? app.applicant.weight + ' kg' : '-'}</div></div>
-                <div class="detail-row"><div class="detail-label">Height:</div><div>${app.applicant?.height ? app.applicant.height + ' cm' : '-'}</div></div>
-                <div class="detail-row"><div class="detail-label">Next of Kin:</div><div>${app.nextOfKin?.name || '-'}</div></div>
-                <div class="detail-row"><div class="detail-label">Kin Phone:</div><div>${app.nextOfKin?.phone || '-'}</div></div>
-                <div class="detail-row"><div class="detail-label">Submitted:</div><div>${new Date(app.createdAt).toLocaleString()}</div></div>
-                ${app.photo ? `<div class="detail-row"><div class="detail-label">Photo:</div><div><img src="data:${app.photo.contentType};base64,${app.photo.data}" style="max-width:120px; border-radius:10px;"></div></div>` : ''}
-            `;
-            document.getElementById('detailModal').style.display = 'flex';
+            if (modalBody) {
+                modalBody.innerHTML = `
+                    <div class="detail-row"><div class="detail-label">Application ID:</div><div>${app.applicationId}</div></div>
+                    <div class="detail-row"><div class="detail-label">Full Name:</div><div>${app.applicant?.fullName || '-'}</div></div>
+                    <div class="detail-row"><div class="detail-label">Phone:</div><div>${app.applicant?.phone || '-'}</div></div>
+                    <div class="detail-row"><div class="detail-label">Nationality:</div><div>${app.applicant?.nationality || '-'}</div></div>
+                    <div class="detail-row"><div class="detail-label">Occupation:</div><div>${app.applicant?.occupation || '-'}</div></div>
+                    <div class="detail-row"><div class="detail-label">Submitted:</div><div>${new Date(app.createdAt).toLocaleString()}</div></div>
+                    ${app.photo ? `<div class="detail-row"><div class="detail-label">Photo:</div><div><img src="data:${app.photo.contentType};base64,${app.photo.data}" style="max-width:100px; border-radius:8px;"></div></div>` : ''}
+                `;
+            }
+            const modal = document.getElementById('detailModal');
+            if (modal) modal.style.display = 'flex';
         }
     } catch (error) {
-        console.error('Error loading details:', error);
         alert('Error loading details');
     }
 }
@@ -271,14 +253,9 @@ async function viewDetails(id) {
 async function deleteApp(id) {
     if (confirm('Are you sure you want to delete this application?')) {
         try {
-            const response = await fetch(`/api/registration/${id}`, { method: 'DELETE' });
-            if (response.ok) {
-                loadApplications();
-            } else {
-                alert('Error deleting');
-            }
+            await fetch(`/api/registration/${id}`, { method: 'DELETE' });
+            loadApplications();
         } catch (error) {
-            console.error('Delete error:', error);
             alert('Error deleting');
         }
     }
@@ -287,39 +264,35 @@ async function deleteApp(id) {
 // Search functionality
 const searchInput = document.getElementById('searchInput');
 if (searchInput) {
-    let searchTimeout;
     searchInput.addEventListener('input', async (e) => {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(async () => {
-            const term = e.target.value.toLowerCase();
-            try {
-                const response = await fetch('/api/registrations');
-                const result = await response.json();
-                const filtered = result.data.filter(app => 
-                    app.applicant?.fullName?.toLowerCase().includes(term) ||
-                    app.applicant?.phone?.includes(term) ||
-                    app.applicationId?.toLowerCase().includes(term)
-                );
-                displayApplications(filtered);
-                document.getElementById('totalCount').innerText = filtered.length;
-            } catch (error) {
-                console.error('Search error:', error);
-            }
-        }, 300);
+        const term = e.target.value.toLowerCase();
+        const response = await fetch('/api/registrations');
+        const result = await response.json();
+        const filtered = result.data.filter(app => 
+            app.applicant?.fullName?.toLowerCase().includes(term) ||
+            app.applicant?.phone?.includes(term) ||
+            app.applicationId?.toLowerCase().includes(term)
+        );
+        displayApplications(filtered);
     });
 }
 
 // Modal close
-document.querySelector('.close-modal')?.addEventListener('click', () => {
-    document.getElementById('detailModal').style.display = 'none';
-});
+const closeModal = document.querySelector('.close-modal');
+if (closeModal) {
+    closeModal.addEventListener('click', () => {
+        const modal = document.getElementById('detailModal');
+        if (modal) modal.style.display = 'none';
+    });
+}
 window.addEventListener('click', (e) => {
-    if (e.target === document.getElementById('detailModal')) {
-        document.getElementById('detailModal').style.display = 'none';
+    const modal = document.getElementById('detailModal');
+    if (e.target === modal && modal) {
+        modal.style.display = 'none';
     }
 });
 
-// Load admin data
+// Load admin data if on admin page
 if (document.getElementById('tableBody')) {
     loadApplications();
 }
