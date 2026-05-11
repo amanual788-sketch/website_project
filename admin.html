@@ -7,6 +7,428 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ============================================ */
+        /* INLINE CSS FOR ADMIN DASHBOARD - PREMIUM DESIGN */
+        /* ============================================ */
+        
+        .admin-body-modern {
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Modern Navbar */
+        .admin-nav-modern {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 16px 32px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-container-modern {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand-modern {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .nav-brand-modern i {
+            font-size: 28px;
+            color: #FFD700;
+        }
+
+        .nav-links-modern {
+            display: flex;
+            gap: 24px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #94A3B8;
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+
+        .nav-link:hover {
+            color: #FFD700;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .nav-link.active {
+            color: #FFD700;
+            background: rgba(255,215,0,0.1);
+            border: 1px solid rgba(255,215,0,0.2);
+        }
+
+        /* Admin Hero */
+        .admin-hero {
+            text-align: center;
+            padding: 60px 20px 40px;
+            background: linear-gradient(135deg, rgba(22,155,98,0.1), rgba(0,90,156,0.1));
+            margin: 20px;
+            border-radius: 32px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .hero-icon i {
+            font-size: 60px;
+            color: #FFD700;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 20px rgba(255,215,0,0.3));
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        .admin-hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FFFFFF, #FFD700);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .admin-hero p {
+            font-size: 1.1rem;
+            color: #94A3B8;
+        }
+
+        /* Stats Container */
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 25px 35px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,215,0,0.3);
+        }
+
+        .stat-circle {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #169B62, #005A9C);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(22,155,98,0.3);
+        }
+
+        .stat-circle i {
+            font-size: 28px;
+            color: white;
+        }
+
+        .stat-circle.pending {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            box-shadow: 0 0 20px rgba(245,158,11,0.3);
+        }
+
+        .stat-circle.today {
+            background: linear-gradient(135deg, #10B981, #059669);
+            box-shadow: 0 0 20px rgba(16,185,129,0.3);
+        }
+
+        .stat-info h3 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .stat-info p {
+            color: #94A3B8;
+            font-size: 0.85rem;
+        }
+
+        /* Search Container */
+        .search-container {
+            max-width: 1200px;
+            margin: 0 auto 30px;
+        }
+
+        .search-box {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 60px;
+            padding: 8px 8px 8px 24px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .search-box i {
+            color: #FFD700;
+            font-size: 18px;
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 1rem;
+            padding: 12px 0;
+            color: white;
+        }
+
+        .search-box input::placeholder {
+            color: #64748B;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(135deg, #169B62, #005A9C);
+            border: none;
+            padding: 10px 28px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .refresh-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(22,155,98,0.4);
+        }
+
+        /* Table Container */
+        .table-container {
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .admin-table th {
+            background: linear-gradient(135deg, #1E293B, #0F172A);
+            color: #FFD700;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .admin-table th i {
+            margin-right: 8px;
+        }
+
+        .admin-table td {
+            padding: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: #E2E8F0;
+        }
+
+        .admin-table tr:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        /* Action Buttons */
+        .view-btn, .delete-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 0 4px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .view-btn {
+            background: linear-gradient(135deg, #005A9C, #003d66);
+            color: white;
+        }
+
+        .view-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0,90,156,0.4);
+        }
+
+        .delete-btn {
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+            color: white;
+        }
+
+        .delete-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(239,68,68,0.4);
+        }
+
+        /* Modal */
+        .modal-modern {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content-modern {
+            background: linear-gradient(135deg, #1E293B, #0F172A);
+            border-radius: 24px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255,215,0,0.3);
+        }
+
+        .modal-header-modern {
+            background: linear-gradient(135deg, #169B62, #005A9C);
+            color: white;
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .close-modal {
+            font-size: 28px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .close-modal:hover {
+            transform: scale(1.1);
+            color: #FFD700;
+        }
+
+        .modal-body-modern {
+            padding: 24px;
+            color: #E2E8F0;
+        }
+
+        .detail-row {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .detail-label {
+            width: 140px;
+            font-weight: 600;
+            color: #FFD700;
+        }
+
+        /* Admin Footer */
+        .admin-footer {
+            text-align: center;
+            padding: 30px;
+            background: rgba(15, 23, 42, 0.95);
+            color: #94A3B8;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .admin-footer .security {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: #FFD700;
+        }
+
+        .loading-cell {
+            text-align: center;
+            padding: 40px;
+            color: #94A3B8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            .stat-card {
+                width: 280px;
+            }
+            
+            .nav-container-modern {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .admin-hero h1 {
+                font-size: 1.6rem;
+            }
+            
+            .admin-table th, .admin-table td {
+                padding: 10px;
+                font-size: 0.8rem;
+            }
+            
+            .detail-row {
+                flex-direction: column;
+            }
+            
+            .detail-label {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
 </head>
 <body class="admin-body-modern">
     
@@ -95,12 +517,12 @@
                         </tr>
                     </thead>
                     <tbody id="tableBody">
-                        <tr><td colspan="7" class="loading-cell">Loading applications...</td><tr>
+                        <tr><td colspan="7" class="loading-cell">Loading applications...<\/td><\/tr>
                     </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+                <\/table>
+            <\/div>
+        <\/div>
+    <\/div>
 
     <!-- Footer -->
     <footer class="admin-footer">
