@@ -1284,3 +1284,14 @@ body {
         width: auto;
     }
 }
+/* Fade Out Right Animation */
+@keyframes fadeOutRight {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+}
