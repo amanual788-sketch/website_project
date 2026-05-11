@@ -57,27 +57,25 @@ function showMessage(message, type) {
     msgDiv.className = `message-toast ${type}`;
     msgDiv.style.display = 'block';
     
-    // Auto hide after 5 seconds
+    // Hide after 8 seconds
     setTimeout(() => {
         msgDiv.style.display = 'none';
-    }, 5000);
+    }, 8000);
 }
 
 // ============================================
-// FORM SUBMISSION - WITH SUCCESS MESSAGE
+// FORM SUBMISSION
 // ============================================
 const form = document.getElementById('registrationForm');
 if (form) {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        // Show loading state
         const submitBtn = form.querySelector('button[type="submit"]');
         const originalBtnText = submitBtn.innerHTML;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
         submitBtn.disabled = true;
         
-        // Collect form data
         const formData = {
             applicant: {
                 fullName: document.getElementById('fullName')?.value || '',
@@ -108,41 +106,35 @@ if (form) {
             }
         };
         
-        // Validate declaration
         const declaration = document.getElementById('declarationCheckbox');
         if (!declaration || !declaration.checked) {
-            showMessage('⚠️ Please confirm that the information provided is true and accurate', 'error');
+            showMessage('Please confirm the declaration', 'error');
             submitBtn.innerHTML = originalBtnText;
             submitBtn.disabled = false;
             return;
         }
         
-        // Validate required fields
         if (!formData.applicant.fullName) {
-            showMessage('⚠️ Please enter your full name', 'error');
+            showMessage('Please enter your full name', 'error');
             submitBtn.innerHTML = originalBtnText;
             submitBtn.disabled = false;
             return;
         }
         
         if (!formData.applicant.phone) {
-            showMessage('⚠️ Please enter your phone number', 'error');
+            showMessage('Please enter your phone number', 'error');
             submitBtn.innerHTML = originalBtnText;
             submitBtn.disabled = false;
             return;
         }
         
-        // Prepare FormData for file upload
         const submitData = new FormData();
         submitData.append('formData', JSON.stringify(formData));
         
         const photoFile = document.getElementById('photoInput')?.files[0];
-        if (photoFile) {
-            submitData.append('photo', photoFile);
-        }
+        if (photoFile) submitData.append('photo', photoFile);
         
         try {
-            // Send to server
             const response = await fetch('/api/register', {
                 method: 'POST',
                 body: submitData
@@ -151,29 +143,22 @@ if (form) {
             const result = await response.json();
             
             if (response.ok && result.success) {
-                // SUCCESS MESSAGE - Registration Successful!
-                showMessage(`✅ REGISTRATION SUCCESSFUL! Application ID: ${result.applicationId}. We will contact you within 3-5 business days.`, 'success');
+                // SUCCESS MESSAGE
+                showMessage('✅ Registration Successful!', 'success');
                 
                 // Reset form
                 form.reset();
-                
-                // Reset photo upload
                 if (photoInput) photoInput.value = '';
                 if (photoPlaceholder) photoPlaceholder.style.display = 'flex';
                 if (photoPreviewArea) photoPreviewArea.style.display = 'none';
                 if (namePlaceholder) namePlaceholder.value = '';
                 
-                // Scroll to top to show message
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                
             } else {
-                showMessage('❌ Submission failed: ' + (result.error || 'Unknown error'), 'error');
+                showMessage('Submission failed: ' + (result.error || 'Unknown error'), 'error');
             }
         } catch (error) {
-            console.error('Error:', error);
-            showMessage('❌ Network error. Please check your connection and try again.', 'error');
+            showMessage('Network error. Please try again.', 'error');
         } finally {
-            // Restore button
             submitBtn.innerHTML = originalBtnText;
             submitBtn.disabled = false;
         }
@@ -194,7 +179,7 @@ async function loadApplications() {
             if (totalCount) totalCount.innerText = result.data.length;
         }
     } catch (error) {
-        console.error('Error loading applications:', error);
+        console.error('Error:', error);
     }
 }
 
@@ -236,8 +221,6 @@ async function viewDetails(id) {
                     <div class="detail-row"><div class="detail-label">Application ID:</div><div>${app.applicationId}</div></div>
                     <div class="detail-row"><div class="detail-label">Full Name:</div><div>${app.applicant?.fullName || '-'}</div></div>
                     <div class="detail-row"><div class="detail-label">Phone:</div><div>${app.applicant?.phone || '-'}</div></div>
-                    <div class="detail-row"><div class="detail-label">Nationality:</div><div>${app.applicant?.nationality || '-'}</div></div>
-                    <div class="detail-row"><div class="detail-label">Occupation:</div><div>${app.applicant?.occupation || '-'}</div></div>
                     <div class="detail-row"><div class="detail-label">Submitted:</div><div>${new Date(app.createdAt).toLocaleString()}</div></div>
                     ${app.photo ? `<div class="detail-row"><div class="detail-label">Photo:</div><div><img src="data:${app.photo.contentType};base64,${app.photo.data}" style="max-width:100px; border-radius:8px;"></div></div>` : ''}
                 `;
@@ -251,7 +234,7 @@ async function viewDetails(id) {
 }
 
 async function deleteApp(id) {
-    if (confirm('Are you sure you want to delete this application?')) {
+    if (confirm('Delete this application?')) {
         try {
             await fetch(`/api/registration/${id}`, { method: 'DELETE' });
             loadApplications();
@@ -261,7 +244,6 @@ async function deleteApp(id) {
     }
 }
 
-// Search functionality
 const searchInput = document.getElementById('searchInput');
 if (searchInput) {
     searchInput.addEventListener('input', async (e) => {
@@ -277,7 +259,6 @@ if (searchInput) {
     });
 }
 
-// Modal close
 const closeModal = document.querySelector('.close-modal');
 if (closeModal) {
     closeModal.addEventListener('click', () => {
@@ -292,7 +273,6 @@ window.addEventListener('click', (e) => {
     }
 });
 
-// Load admin data if on admin page
 if (document.getElementById('tableBody')) {
     loadApplications();
 }
