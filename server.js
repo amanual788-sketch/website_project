@@ -15,9 +15,9 @@ const upload = multer({ storage: storage, limits: { fileSize: 5 * 1024 * 1024 } 
 // ============================================
 // UPDATE YOUR MONGODB PASSWORD HERE
 // ============================================
-const MONGODB_PASSWORD = process.env.MONGODB_PASSWORD || 'Test123456';
+const MONGODB_PASSWORD = process.env.MONGODB_PASSWORD || 'aye@#.com';
 
-const uri = `mongodb+srv://fristtrydb:${MONGODB_PASSWORD}@firstcluster.awquwo3.mongodb.net/?retryWrites=true&w=majority&appName=firstcluster`;
+const uri = `mongodb+srv://irelandembassy:aye@#.com@irelandembassy.zil0sky.mongodb.net/?appName=irelandembassy`;
 
 const client = new MongoClient(uri);
 let database;

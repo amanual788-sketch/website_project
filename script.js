@@ -90,6 +90,7 @@ if (form) {
         if (photoFile) submitData.append('photo', photoFile);
         
         const submitBtn = document.querySelector('.submit-btn-glow');
+        const originalText = submitBtn.innerHTML;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
         submitBtn.disabled = true;
         
@@ -110,7 +111,7 @@ if (form) {
         } catch (error) {
             showMessage('❌ Network error. Please try again.', 'error');
         } finally {
-            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> መዝግብ | Submit Application';
+            submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;
         }
     });
@@ -148,7 +149,7 @@ function displayApplications(data) {
     if (!tbody) return;
     
     if (data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" class="loading-cell">No applications found</td><th';
+        tbody.innerHTML = '<tr><td colspan="7" class="loading-cell">No applications found</td></tr>';
         return;
     }
     
@@ -191,8 +192,7 @@ async function viewDetails(id) {
                 <div class="detail-row"><div class="detail-label">Next of Kin:</div><div>${app.nextOfKin?.name || '-'}</div></div>
                 <div class="detail-row"><div class="detail-label">Kin Phone:</div><div>${app.nextOfKin?.phone || '-'}</div></div>
                 <div class="detail-row"><div class="detail-label">Submitted:</div><div>${new Date(app.createdAt).toLocaleString()}</div></div>
-                <div class="detail-row"><div class="detail-label">Signature:</div><div>${app.signature?.applicantSignature || '-'}</div></div>
-                ${app.photo ? `<div class="detail-row"><div class="detail-label">Photo:</div><div><img src="data:${app.photo.contentType};base64,${app.photo.data}" style="max-width:120px; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.1);"></div></div>` : ''}
+                ${app.photo ? `<div class="detail-row"><div class="detail-label">Photo:</div><div><img src="data:${app.photo.contentType};base64,${app.photo.data}" style="max-width:120px; border-radius:10px;"></div></div>` : ''}
             `;
             document.getElementById('detailModal').style.display = 'flex';
         }
