@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Admin Dashboard | Ireland Embassy Registration</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-dashboard">
+    <div class="admin-nav-premium">
+        <div class="admin-container">
+            <div class="admin-brand">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Coat_of_arms_of_Ireland.svg/35px-Coat_of_arms_of_Ireland.svg.png" alt="Logo">
+                <span>Ireland Embassy - Admin Portal</span>
+            </div>
+            <div class="admin-nav-actions">
+                <a href="/" class="admin-nav-link"><i class="fas fa-home"></i> Home</a>
+                <a href="/admin" class="admin-nav-link active"><i class="fas fa-chart-line"></i> Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-header-premium">
+        <h1><i class="fas fa-users-cog"></i> Registration Management</h1>
+        <p>Manage and review all Ireland Embassy job applications</p>
+    </div>
+
+    <div class="admin-container">
+        <div class="stats-grid-premium">
+            <div class="stat-card-premium">
+                <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+                <div class="stat-number" id="totalCount">0</div>
+                <div class="stat-label">Total Applications</div>
+            </div>
+        </div>
+
+        <div class="search-section-premium">
+            <div class="search-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search by name, phone or application ID...">
+                <button onclick="loadApplications()" class="refresh-premium"><i class="fas fa-sync-alt"></i> Refresh</button>
+            </div>
+        </div>
+
+        <div class="table-container-premium">
+            <div class="table-responsive">
+                <table class="premium-table">
+                    <thead>
+                        <tr>
+                            <th>App ID</th>
+                            <th>Full Name</th>
+                            <th>Phone</th>
+                            <th>Nationality</th>
+                            <th>Submitted</th>
+                            <th>Photo</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr><td colspan="7" class="loading-cell">Loading applications...</td><th>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination" id="pagination"></div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="detailModal" class="premium-modal">
+        <div class="modal-content-premium">
+            <div class="modal-header-premium">
+                <h3><i class="fas fa-file-alt"></i> Application Details</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body-premium" id="modalBody"></div>
+        </div>
+    </div>
+
+    <footer class="admin-footer-premium">
+        <p>© 2024 Embassy of Ireland - Official Registration System</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

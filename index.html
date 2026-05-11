@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Ireland Embassy | Official Job Registration Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Ethiopic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- ============================================ -->
+    <!-- FLAGS - TOP RIGHT CORNER (WORKING LINKS) -->
+    <!-- ============================================ -->
+    <div class="flags-corner">
+        <div class="flags-container-corner">
+            <!-- Ethiopia Flag - Reliable CDN -->
+            <div class="flag-icon">
+                <img src="https://flagcdn.com/w320/et.png" 
+                     alt="Ethiopia Flag" 
+                     class="flag-img-corner"
+                     onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Flag_of_Ethiopia.svg/80px-Flag_of_Ethiopia.svg.png'">
+                <span class="flag-name-corner">ኢትዮጵያ</span>
+            </div>
+            
+            <div class="flag-separator">
+                <i class="fas fa-handshake"></i>
+            </div>
+            
+            <!-- Ireland Flag - Reliable CDN -->
+            <div class="flag-icon">
+                <img src="https://flagcdn.com/w320/ie.png" 
+                     alt="Ireland Flag" 
+                     class="flag-img-corner"
+                     onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Flag_of_Ireland.svg/80px-Flag_of_Ireland.svg.png'">
+                <span class="flag-name-corner">Ireland</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- EMBASSY HEADER WITH LOGO (WORKING LINK) -->
+    <!-- ============================================ -->
+    <div class="embassy-header">
+        <div class="embassy-logo-wrapper">
+            <div class="logo-circle">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Coat_of_arms_of_Ireland.svg/100px-Coat_of_arms_of_Ireland.svg.png" 
+                     alt="Ireland Embassy Logo" 
+                     class="embassy-logo-img"
+                     onerror="this.src='https://www.dfa.ie/images/logo/dfa-logo-ie.png'">
+                <div class="logo-ring"></div>
+            </div>
+            <h1 class="embassy-title-text">EMBASSY OF IRELAND</h1>
+            <p class="embassy-subtitle">ጠቅላይ ቢሮ አይርላንድ</p>
+            <div class="government-seal">
+                <i class="fas fa-shield-alt"></i> GOVERNMENT OF IRELAND <i class="fas fa-shield-alt"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- OFFICIAL ANNOUNCEMENT -->
+    <!-- ============================================ -->
+    <div class="announcement-card">
+        <div class="announcement-icon">
+            <i class="fas fa-scroll"></i>
+        </div>
+        <div class="announcement-text">
+            <p>በቅድመያ የማክበር ሰላምታችንን እያቀረበን የአይርላንድ መንግስት አዲስ ባወጣው መግለጫ መሠረት ከፍተኛ የሰው ሀይል እንደመያስፈልግ እንደተገለፀ ይታወቃል።</p>
+            <div class="declaration-line">
+                <i class="fas fa-quote-left"></i>
+                <span class="declaration-highlight">በዚህ መሠረት አቶ/ወ/ሮ</span>
+                <input type="text" id="applicantNamePlaceholder" class="name-placeholder-input" placeholder="ሙሉ ስምዎን ያስገቡ | Enter your full name">
+                <span class="declaration-highlight">በዚህ በወጣው መግለጫ መሠረት ተመዝጋቢ ሆኜ ቀርቤአለሁ ስለሆነም በኢትዮጵያዊነቱ በመንግሥት እርዳታ አይርላንድ ለመሄድ ከዚህ በታች በሞላሁት ፎርም አስቀምጣለሁ።</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- REGISTRATION FORM -->
+    <!-- ============================================ -->
+    <div class="form-wrapper">
+        <div class="form-container">
+            <div class="form-header-glow">
+                <h2><i class="fas fa-pen-alt"></i> የምዝገባ ፎርም | Registration Form</h2>
+                <p>Please fill all fields accurately | እባክዎ ሁሉንም መረጃዎች በትክክል ይሙሉ</p>
+            </div>
+
+            <!-- PHOTO SECTION -->
+            <div class="photo-upload-glow">
+                <div class="photo-icon-badge">
+                    <i class="fas fa-camera-retro"></i>
+                    <span>የተመዝጋቢው ፎቶግራፍ | Applicant Photo</span>
+                </div>
+                <div class="photo-area-premium" id="photoArea">
+                    <input type="file" id="photoInput" accept="image/*">
+                    <div class="photo-placeholder-premium">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>Click to upload photo</span>
+                        <small>Passport size (Max 5MB)</small>
+                    </div>
+                    <div class="photo-preview-premium" id="photoPreviewArea" style="display: none;">
+                        <img id="photoPreview" alt="Preview">
+                        <button type="button" id="removePhoto" class="remove-photo-btn"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <form id="registrationForm" enctype="multipart/form-data">
+                <!-- SECTION 1 -->
+                <div class="section-card">
+                    <div class="section-badge">
+                        <span class="badge-number">01</span>
+                        <h3>የተመዝጋቢው ማንነት | Applicant Identity</h3>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-field">
+                            <label><i class="fas fa-user"></i> መለ ስም | Full Name *</label>
+                            <input type="text" id="fullName" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="input-field">
+                            <label><i class="fas fa-map-marker-alt"></i> አድራሻ | Address</label>
+                            <input type="text" id="address" placeholder="Your residential address">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-field">
+                            <label><i class="fas fa-flag"></i> ዜግነት | Nationality *</label>
+                            <input type="text" id="nationality" value="ኢትዮጵያዊ | Ethiopian">
+                        </div>
+                        <div class="input-field">
+                            <label><i class="fas fa-calendar-alt"></i> ዖታ | Age</label>
+                            <input type="number" id="age" placeholder="Age">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-field">
+                            <label><i class="fas fa-birthday-cake"></i> የትውልድ ዘመን | Date of Birth</label>
+                            <input type="date" id="dob">
+                        </div>
+                        <div class="input-field">
+                            <label><i class="fas fa-globe-africa"></i> የትውልድ ቦታ | Place of Birth</label>
+                            <input type="text" id="birthPlace" placeholder="City, Country">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-field">
+                            <label><i class="fas fa-briefcase"></i> የመተዳደሪያ ስራ | Occupation</label>
+                            <input type="text" id="occupation" placeholder="Your occupation">
+                        </div>
+                        <div class="input-field">
+                            <label><i class="fas fa-id-card"></i> የመታዎቂያ ቁጥር | ID Number</label>
+                            <input type="text" id="idNumber" placeholder="Passport/National ID">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-field">
+                            <label><i class="fas fa-calendar-check"></i> ፎርም የተሞላበት ቀን | Form Date</label>
+                            <input type="date" id="formDate">
+                        </div>
+                        <div class="input-field">
+                            <label><i class="fas fa-phone"></i> ስልክ ቁጥር | Phone *</label>
+                            <input type="tel" id="phone" placeholder="+251 XXX XXX XXX" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-field">
+                            <label><i class="fas fa-weight-scale"></i> ክብደት | Weight (kg)</label>
+                            <input type="number" id="weight" step="0.1" placeholder="Weight">
+                        </div>
+                        <div class="input-field">
+                            <label><i class="fas fa-ruler"></i> ቀመት | Height (cm)</label>
+                            <input type="number" id="height" placeholder="Height">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 2: NEXT OF KIN -->
+                <div class="section-card">
+                    <div class="section-badge">
+                        <span class="badge-number">02</span>
+                        <h3>የቅርብ ተጠሪ ወይም ተያዥ | Next of Kin</h3>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-field">
+                            <label><i class="fas fa-user-friends"></i> መለ ስም | Name</label>
+                            <input type="text" id="kinName" placeholder="Next of kin full name">
+                        </div>
+                        <div class="input-field">
+                            <label><i class="fas fa-home"></i> አድራሻ | Address</label>
+                            <input type="text" id="kinAddress" placeholder="Their address">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-field">
+                            <label><i class="fas fa-map-pin"></i> ክልል | Region</label>
+                            <input type="text" id="kinRegion" placeholder="Region">
+                        </div>
+                        <div class="input-field">
+                            <label><i class="fas fa-city"></i> ቀበሉ | Sub-city/Zone</label>
+                            <input type="text" id="kinSubcity" placeholder="Sub-city or zone">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-field">
+                            <label><i class="fas fa-flag-checkered"></i> ዜግነት | Nationality</label>
+                            <input type="text" id="kinNationality" placeholder="Nationality">
+                        </div>
+                        <div class="input-field">
+                            <label><i class="fas fa-id-card"></i> የመታዎቂ ቁጥር | ID Number</label>
+                            <input type="text" id="kinIdNumber" placeholder="ID Number">
+                        </div>
+                        <div class="input-field">
+                            <label><i class="fas fa-phone-alt"></i> ስልክ | Phone</label>
+                            <input type="tel" id="kinPhone" placeholder="Phone number">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SIGNATURES -->
+                <div class="signature-card">
+                    <div class="signature-title">
+                        <i class="fas fa-signature"></i>
+                        <span>ማረጋገጫ | Signatures</span>
+                    </div>
+                    <div class="signature-input-group">
+                        <div class="signature-field">
+                            <label>የተመዝጋቢው ስም እና ፊርማ :</label>
+                            <input type="text" id="applicantSignature" placeholder="Full name as signature">
+                        </div>
+                        <div class="signature-field">
+                            <label>የተያዥ ስም እና ፊርማ :</label>
+                            <input type="text" id="witnessSignature" placeholder="Witness full name">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EMBASSY STAMP -->
+                <div class="embassy-stamp-card">
+                    <div class="stamp-circle">
+                        <i class="fas fa-stamp"></i>
+                        <div class="stamp-text">
+                            <span>EMBASSY</span>
+                            <span>OF IRELAND</span>
+                        </div>
+                        <i class="fas fa-stamp"></i>
+                    </div>
+                </div>
+
+                <!-- DECLARATION -->
+                <div class="declaration-card-glow">
+                    <label class="checkbox-glow">
+                        <input type="checkbox" id="declarationCheckbox">
+                        <span class="checkmark-glow"></span>
+                        <span class="declaration-text-glow">እውነት መሆኑን እረጋገጣለሁ | I hereby declare that the information provided is true and accurate</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="submit-btn-glow">
+                    <i class="fas fa-paper-plane"></i> መዝግብ | Submit Application
+                </button>
+            </form>
+
+            <div id="message" class="message-toast"></div>
+        </div>
+    </div>
+
+    <footer class="premium-footer">
+        <div class="footer-content">
+            <div class="footer-logo-area">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Coat_of_arms_of_Ireland.svg/30px-Coat_of_arms_of_Ireland.svg.png" alt="Logo">
+                <span>EMBASSY OF IRELAND</span>
+            </div>
+            <p>© 2024 Official Job Registration Portal | All Rights Reserved</p>
+            <p class="footer-security"><i class="fas fa-shield-alt"></i> Secure Application | Data Protected</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
