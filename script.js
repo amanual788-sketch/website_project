@@ -9,6 +9,18 @@ if (photoInput) {
     photoInput.addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
+            // Validate file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showMessage('Photo size must be less than 5MB', 'error');
+                this.value = '';
+                return;
+            }
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                showMessage('Please upload an image file', 'error');
+                this.value = '';
+                return;
+            }
             const reader = new FileReader();
             reader.onload = function(event) {
                 photoPreview.src = event.target.result;
@@ -42,47 +54,87 @@ if (namePlaceholder && fullNameField) {
     });
 }
 
+// Set default form date to today
+const formDateField = document.getElementById('formDate');
+if (formDateField) {
+    const today = new Date().toISOString().split('T')[0];
+    formDateField.value = today;
+}
+
 // Form Submission
 const form = document.getElementById('registrationForm');
 if (form) {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        const formData = {
-            applicant: {
-                fullName: document.getElementById('fullName').value,
-                address: document.getElementById('address').value,
-                nationality: document.getElementById('nationality').value,
-                age: document.getElementById('age').value,
-                dateOfBirth: document.getElementById('dob').value,
-                placeOfBirth: document.getElementById('birthPlace').value,
-                occupation: document.getElementById('occupation').value,
-                idNumber: document.getElementById('idNumber').value,
-                formDate: document.getElementById('formDate').value,
-                weight: document.getElementById('weight').value,
-                height: document.getElementById('height').value,
-                phone: document.getElementById('phone').value
-            },
-            nextOfKin: {
-                name: document.getElementById('kinName').value,
-                address: document.getElementById('kinAddress').value,
-                region: document.getElementById('kinRegion').value,
-                subcity: document.getElementById('kinSubcity').value,
-                nationality: document.getElementById('kinNationality').value,
-                idNumber: document.getElementById('kinIdNumber').value,
-                phone: document.getElementById('kinPhone').value
-            },
-            signature: {
-                applicantSignature: document.getElementById('applicantSignature').value,
-                witnessSignature: document.getElementById('witnessSignature').value
-            }
-        };
-        
+        // Validate required fields
+        const fullName = document.getElementById('fullName').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const nationality = document.getElementById('nationality').value.trim();
         const declaration = document.getElementById('declarationCheckbox');
+        
+        if (!fullName) {
+            showMessage('Please enter your full name', 'error');
+            document.getElementById('fullName').focus();
+            return;
+        }
+        
+        if (!phone) {
+            showMessage('Please enter your phone number', 'error');
+            document.getElementById('phone').focus();
+            return;
+        }
+        
+        if (!nationality) {
+            showMessage('Please enter your nationality', 'error');
+            document.getElementById('nationality').focus();
+            return;
+        }
+        
         if (!declaration.checked) {
             showMessage('Please confirm the declaration', 'error');
             return;
         }
+        
+        // Get numeric values as numbers (not strings)
+        let height = document.getElementById('height').value;
+        let weight = document.getElementById('weight').value;
+        let age = document.getElementById('age').value;
+        
+        // Convert to numbers
+        height = height ? parseFloat(height) : null;
+        weight = weight ? parseFloat(weight) : null;
+        age = age ? parseInt(age) : null;
+        
+        const formData = {
+            applicant: {
+                fullName: fullName,
+                address: document.getElementById('address').value || '',
+                nationality: nationality,
+                age: age,
+                dateOfBirth: document.getElementById('dob').value || '',
+                placeOfBirth: document.getElementById('birthPlace').value || '',
+                occupation: document.getElementById('occupation').value || '',
+                idNumber: document.getElementById('idNumber').value || '',
+                formDate: document.getElementById('formDate').value || '',
+                weight: weight,
+                height: height,
+                phone: phone
+            },
+            nextOfKin: {
+                name: document.getElementById('kinName').value || '',
+                address: document.getElementById('kinAddress').value || '',
+                region: document.getElementById('kinRegion').value || '',
+                subcity: document.getElementById('kinSubcity').value || '',
+                nationality: document.getElementById('kinNationality').value || '',
+                idNumber: document.getElementById('kinIdNumber').value || '',
+                phone: document.getElementById('kinPhone').value || ''
+            },
+            signature: {
+                applicantSignature: document.getElementById('applicantSignature').value || '',
+                witnessSignature: document.getElementById('witnessSignature').value || ''
+            }
+        };
         
         const submitData = new FormData();
         submitData.append('formData', JSON.stringify(formData));
@@ -95,7 +147,11 @@ if (form) {
         submitBtn.disabled = true;
         
         try {
-            const response = await fetch('/api/register', { method: 'POST', body: submitData });
+            const response = await fetch('/api/register', { 
+                method: 'POST', 
+                body: submitData 
+            });
+            
             const result = await response.json();
             
             if (result.success) {
@@ -104,12 +160,15 @@ if (form) {
                 if (photoPreviewArea) photoPreviewArea.style.display = 'none';
                 if (photoPlaceholder) photoPlaceholder.style.display = 'flex';
                 if (namePlaceholder) namePlaceholder.value = '';
+                // Reset form date to today
+                if (formDateField) formDateField.value = today;
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
-                showMessage('❌ Error: ' + result.error, 'error');
+                showMessage('❌ Error: ' + (result.error || 'Unknown error'), 'error');
             }
         } catch (error) {
-            showMessage('❌ Network error. Please try again.', 'error');
+            console.error('Network error:', error);
+            showMessage('❌ Network error. Please check your internet connection and try again.', 'error');
         } finally {
             submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;
@@ -138,9 +197,15 @@ async function loadApplications() {
         if (result.success) {
             displayApplications(result.data);
             document.getElementById('totalCount').innerText = result.data.length;
+        } else {
+            console.error('Failed to load:', result.error);
         }
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error loading applications:', error);
+        const tbody = document.getElementById('tableBody');
+        if (tbody) {
+            tbody.innerHTML = '<tr><td colspan="7" class="loading-cell">Error loading applications. Please refresh.</td></tr>';
+        }
     }
 }
 
@@ -188,7 +253,8 @@ async function viewDetails(id) {
                 <div class="detail-row"><div class="detail-label">Occupation:</div><div>${app.applicant?.occupation || '-'}</div></div>
                 <div class="detail-row"><div class="detail-label">ID Number:</div><div>${app.applicant?.idNumber || '-'}</div></div>
                 <div class="detail-row"><div class="detail-label">Phone:</div><div>${app.applicant?.phone || '-'}</div></div>
-                <div class="detail-row"><div class="detail-label">Weight/Height:</div><div>${app.applicant?.weight || '-'} kg / ${app.applicant?.height || '-'} cm</div></div>
+                <div class="detail-row"><div class="detail-label">Weight:</div><div>${app.applicant?.weight ? app.applicant.weight + ' kg' : '-'}</div></div>
+                <div class="detail-row"><div class="detail-label">Height:</div><div>${app.applicant?.height ? app.applicant.height + ' cm' : '-'}</div></div>
                 <div class="detail-row"><div class="detail-label">Next of Kin:</div><div>${app.nextOfKin?.name || '-'}</div></div>
                 <div class="detail-row"><div class="detail-label">Kin Phone:</div><div>${app.nextOfKin?.phone || '-'}</div></div>
                 <div class="detail-row"><div class="detail-label">Submitted:</div><div>${new Date(app.createdAt).toLocaleString()}</div></div>
@@ -197,6 +263,7 @@ async function viewDetails(id) {
             document.getElementById('detailModal').style.display = 'flex';
         }
     } catch (error) {
+        console.error('Error loading details:', error);
         alert('Error loading details');
     }
 }
@@ -204,9 +271,14 @@ async function viewDetails(id) {
 async function deleteApp(id) {
     if (confirm('Are you sure you want to delete this application?')) {
         try {
-            await fetch(`/api/registration/${id}`, { method: 'DELETE' });
-            loadApplications();
+            const response = await fetch(`/api/registration/${id}`, { method: 'DELETE' });
+            if (response.ok) {
+                loadApplications();
+            } else {
+                alert('Error deleting');
+            }
         } catch (error) {
+            console.error('Delete error:', error);
             alert('Error deleting');
         }
     }
@@ -215,16 +287,25 @@ async function deleteApp(id) {
 // Search functionality
 const searchInput = document.getElementById('searchInput');
 if (searchInput) {
+    let searchTimeout;
     searchInput.addEventListener('input', async (e) => {
-        const term = e.target.value.toLowerCase();
-        const response = await fetch('/api/registrations');
-        const result = await response.json();
-        const filtered = result.data.filter(app => 
-            app.applicant?.fullName?.toLowerCase().includes(term) ||
-            app.applicant?.phone?.includes(term) ||
-            app.applicationId?.toLowerCase().includes(term)
-        );
-        displayApplications(filtered);
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(async () => {
+            const term = e.target.value.toLowerCase();
+            try {
+                const response = await fetch('/api/registrations');
+                const result = await response.json();
+                const filtered = result.data.filter(app => 
+                    app.applicant?.fullName?.toLowerCase().includes(term) ||
+                    app.applicant?.phone?.includes(term) ||
+                    app.applicationId?.toLowerCase().includes(term)
+                );
+                displayApplications(filtered);
+                document.getElementById('totalCount').innerText = filtered.length;
+            } catch (error) {
+                console.error('Search error:', error);
+            }
+        }, 300);
     });
 }
 
