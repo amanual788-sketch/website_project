@@ -47,29 +47,60 @@ if (namePlaceholder && fullNameField) {
 }
 
 // ============================================
-// SHOW MESSAGE FUNCTION - AT BOTTOM
+// MODERN NOTIFICATION FUNCTION (BOTTOM RIGHT)
 // ============================================
-function showMessage(message, type) {
-    const msgDiv = document.getElementById('message');
-    if (!msgDiv) return;
+function showNotification(title, message, type) {
+    // Create container if not exists
+    let container = document.querySelector('.notification-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'notification-container';
+        document.body.appendChild(container);
+    }
     
-    msgDiv.textContent = message;
-    msgDiv.className = `message-toast ${type}`;
-    msgDiv.style.display = 'block';
-    msgDiv.style.position = 'fixed';
-    msgDiv.style.bottom = '30px';
-    msgDiv.style.left = '50%';
-    msgDiv.style.transform = 'translateX(-50%)';
-    msgDiv.style.zIndex = '9999';
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
     
-    // Hide after 5 seconds
+    notification.innerHTML = `
+        <div class="notification-icon">
+            <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+        </div>
+        <div class="notification-content">
+            <div class="notification-title">${title}</div>
+            <div class="notification-message">${message}</div>
+        </div>
+        <div class="notification-close">
+            <i class="fas fa-times"></i>
+        </div>
+    `;
+    
+    container.appendChild(notification);
+    
+    // Auto remove after 5 seconds
     setTimeout(() => {
-        msgDiv.style.display = 'none';
+        if (notification) {
+            notification.style.animation = 'fadeOutRight 0.3s ease';
+            setTimeout(() => {
+                if (notification && notification.remove) notification.remove();
+            }, 300);
+        }
     }, 5000);
+    
+    // Close button functionality
+    const closeBtn = notification.querySelector('.notification-close');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            notification.style.animation = 'fadeOutRight 0.3s ease';
+            setTimeout(() => {
+                if (notification && notification.remove) notification.remove();
+            }, 300);
+        });
+    }
 }
 
 // ============================================
-// FORM SUBMISSION
+// FORM SUBMISSION - UPDATED WITH MODERN NOTIFICATION
 // ============================================
 const form = document.getElementById('registrationForm');
 if (form) {
@@ -113,21 +144,21 @@ if (form) {
         
         const declaration = document.getElementById('declarationCheckbox');
         if (!declaration || !declaration.checked) {
-            showMessage('⚠️ Please confirm the declaration', 'error');
+            showNotification('⚠️ Declaration Required', 'Please confirm the information is true and accurate', 'error');
             submitBtn.innerHTML = originalBtnText;
             submitBtn.disabled = false;
             return;
         }
         
         if (!formData.applicant.fullName) {
-            showMessage('⚠️ Please enter your full name', 'error');
+            showNotification('⚠️ Missing Information', 'Please enter your full name', 'error');
             submitBtn.innerHTML = originalBtnText;
             submitBtn.disabled = false;
             return;
         }
         
         if (!formData.applicant.phone) {
-            showMessage('⚠️ Please enter your phone number', 'error');
+            showNotification('⚠️ Missing Information', 'Please enter your phone number', 'error');
             submitBtn.innerHTML = originalBtnText;
             submitBtn.disabled = false;
             return;
@@ -148,7 +179,12 @@ if (form) {
             const result = await response.json();
             
             if (response.ok && result.success) {
-                showMessage('✅ Registration Successful!', 'success');
+                // MODERN SUCCESS NOTIFICATION AT BOTTOM
+                showNotification(
+                    '✅ Registration Successful!', 
+                    `Application ID: ${result.applicationId}`, 
+                    'success'
+                );
                 
                 form.reset();
                 if (photoInput) photoInput.value = '';
@@ -157,10 +193,11 @@ if (form) {
                 if (namePlaceholder) namePlaceholder.value = '';
                 
             } else {
-                showMessage('❌ Submission failed: ' + (result.error || 'Unknown error'), 'error');
+                showNotification('❌ Submission Failed', result.error || 'Unknown error occurred', 'error');
             }
         } catch (error) {
-            showMessage('❌ Network error. Please try again.', 'error');
+            console.error('Error:', error);
+            showNotification('❌ Network Error', 'Please check your connection and try again', 'error');
         } finally {
             submitBtn.innerHTML = originalBtnText;
             submitBtn.disabled = false;
@@ -179,7 +216,17 @@ async function loadApplications() {
         if (result.success) {
             displayApplications(result.data);
             const totalCount = document.getElementById('totalCount');
+            const pendingCount = document.getElementById('pendingCount');
+            const todayCount = document.getElementById('todayCount');
+            
             if (totalCount) totalCount.innerText = result.data.length;
+            
+            const pending = result.data.filter(app => app.status === 'pending').length;
+            if (pendingCount) pendingCount.innerText = pending;
+            
+            const today = new Date().toDateString();
+            const todayApps = result.data.filter(app => new Date(app.createdAt).toDateString() === today).length;
+            if (todayCount) todayCount.innerText = todayApps;
         }
     } catch (error) {
         console.error('Error:', error);
@@ -204,8 +251,8 @@ function displayApplications(data) {
             <td>${new Date(app.createdAt).toLocaleDateString()}</td>
             <td>${app.photo ? '<i class="fas fa-check-circle" style="color:#10B981"></i>' : '<i class="fas fa-times-circle" style="color:#EF4444"></i>'}</td>
             <td class="action-buttons">
-                <button class="view-btn" onclick="viewDetails('${app._id}')"><i class="fas fa-eye"></i></button>
-                <button class="delete-btn" onclick="deleteApp('${app._id}')"><i class="fas fa-trash"></i></button>
+                <button class="view-btn" onclick="viewDetails('${app._id}')"><i class="fas fa-eye"></i> View</button>
+                <button class="delete-btn" onclick="deleteApp('${app._id}')"><i class="fas fa-trash"></i> Delete</button>
             </td>
         </tr>
     `).join('');
@@ -224,6 +271,11 @@ async function viewDetails(id) {
                     <div class="detail-row"><div class="detail-label">Application ID:</div><div>${app.applicationId}</div></div>
                     <div class="detail-row"><div class="detail-label">Full Name:</div><div>${app.applicant?.fullName || '-'}</div></div>
                     <div class="detail-row"><div class="detail-label">Phone:</div><div>${app.applicant?.phone || '-'}</div></div>
+                    <div class="detail-row"><div class="detail-label">Nationality:</div><div>${app.applicant?.nationality || '-'}</div></div>
+                    <div class="detail-row"><div class="detail-label">Occupation:</div><div>${app.applicant?.occupation || '-'}</div></div>
+                    <div class="detail-row"><div class="detail-label">Address:</div><div>${app.applicant?.address || '-'}</div></div>
+                    <div class="detail-row"><div class="detail-label">Next of Kin:</div><div>${app.nextOfKin?.name || '-'}</div></div>
+                    <div class="detail-row"><div class="detail-label">Kin Phone:</div><div>${app.nextOfKin?.phone || '-'}</div></div>
                     <div class="detail-row"><div class="detail-label">Submitted:</div><div>${new Date(app.createdAt).toLocaleString()}</div></div>
                     ${app.photo ? `<div class="detail-row"><div class="detail-label">Photo:</div><div><img src="data:${app.photo.contentType};base64,${app.photo.data}" style="max-width:100px; border-radius:8px;"></div></div>` : ''}
                 `;
@@ -236,17 +288,35 @@ async function viewDetails(id) {
     }
 }
 
+// ============================================
+// WORKING DELETE FUNCTION
+// ============================================
 async function deleteApp(id) {
-    if (confirm('Delete this application?')) {
+    if (confirm('⚠️ Are you sure you want to delete this application? This action cannot be undone.')) {
         try {
-            await fetch(`/api/registration/${id}`, { method: 'DELETE' });
-            loadApplications();
+            const response = await fetch(`/api/registration/${id}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showNotification('✅ Deleted Successfully', 'Application has been removed', 'success');
+                loadApplications();
+            } else {
+                showNotification('❌ Delete Failed', result.message || 'Unknown error', 'error');
+            }
         } catch (error) {
-            alert('Error deleting');
+            console.error('Delete error:', error);
+            showNotification('❌ Network Error', 'Please try again', 'error');
         }
     }
 }
 
+// ============================================
+// SEARCH FUNCTIONALITY
+// ============================================
 const searchInput = document.getElementById('searchInput');
 if (searchInput) {
     searchInput.addEventListener('input', async (e) => {
@@ -262,6 +332,9 @@ if (searchInput) {
     });
 }
 
+// ============================================
+// MODAL CLOSE
+// ============================================
 const closeModal = document.querySelector('.close-modal');
 if (closeModal) {
     closeModal.addEventListener('click', () => {
@@ -276,6 +349,9 @@ window.addEventListener('click', (e) => {
     }
 });
 
+// ============================================
+// LOAD ADMIN DATA
+// ============================================
 if (document.getElementById('tableBody')) {
     loadApplications();
 }
