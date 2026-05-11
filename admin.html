@@ -8,77 +8,116 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="admin-body">
-    <div class="admin-nav-premium">
-        <div class="admin-container">
-            <div class="admin-brand">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Coat_of_arms_of_Ireland.svg/30px-Coat_of_arms_of_Ireland.svg.png" alt="Logo">
-                <span>Ireland Embassy - Admin Portal</span>
+<body class="admin-body-modern">
+    
+    <!-- Modern Navbar - No Logo -->
+    <nav class="admin-nav-modern">
+        <div class="nav-container-modern">
+            <div class="nav-brand-modern">
+                <i class="fas fa-harp"></i>
+                <span>Ireland Embassy</span>
             </div>
-            <div class="admin-nav-actions">
-                <a href="/" class="admin-nav-link"><i class="fas fa-home"></i> Home</a>
-                <a href="/admin" class="admin-nav-link active"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <div class="nav-links-modern">
+                <a href="/" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                <a href="/admin" class="nav-link active"><i class="fas fa-chart-line"></i> Dashboard</a>
             </div>
+        </div>
+    </nav>
+
+    <!-- Hero Header -->
+    <div class="admin-hero">
+        <div class="hero-content">
+            <div class="hero-icon">
+                <i class="fas fa-users-cog"></i>
+            </div>
+            <h1>Registration Management</h1>
+            <p>Manage and review all Ireland Embassy job applications</p>
         </div>
     </div>
 
-    <div class="admin-header-premium">
-        <h1><i class="fas fa-users-cog"></i> Registration Management</h1>
-        <p>Manage and review all Ireland Embassy job applications</p>
-    </div>
-
-    <div class="admin-container">
-        <div class="stats-grid-premium">
-            <div class="stat-card-premium">
-                <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
-                <div class="stat-number" id="totalCount">0</div>
-                <div class="stat-label">Total Applications</div>
+    <!-- Main Container -->
+    <div class="admin-main">
+        <!-- Stats Cards -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-circle">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalCount">0</h3>
+                    <p>Total Applications</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-circle pending">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="pendingCount">0</h3>
+                    <p>Pending Review</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-circle today">
+                    <i class="fas fa-calendar-day"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="todayCount">0</h3>
+                    <p>Today's Applications</p>
+                </div>
             </div>
         </div>
 
-        <div class="search-section-premium">
-            <div class="search-wrapper">
+        <!-- Search Bar -->
+        <div class="search-container">
+            <div class="search-box">
                 <i class="fas fa-search"></i>
                 <input type="text" id="searchInput" placeholder="Search by name, phone or application ID...">
-                <button onclick="loadApplications()" class="refresh-premium"><i class="fas fa-sync-alt"></i> Refresh</button>
+                <button onclick="loadApplications()" class="refresh-btn">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
             </div>
         </div>
 
-        <div class="table-container-premium">
-            <div class="table-responsive">
-                <table class="premium-table">
+        <!-- Table -->
+        <div class="table-container">
+            <div class="table-wrapper">
+                <table class="admin-table">
                     <thead>
                         <tr>
-                            <th>App ID</th>
-                            <th>Full Name</th>
-                            <th>Phone</th>
-                            <th>Nationality</th>
-                            <th>Submitted</th>
-                            <th>Photo</th>
-                            <th>Actions</th>
+                            <th><i class="fas fa-hashtag"></i> App ID</th>
+                            <th><i class="fas fa-user"></i> Full Name</th>
+                            <th><i class="fas fa-phone"></i> Phone</th>
+                            <th><i class="fas fa-flag"></i> Nationality</th>
+                            <th><i class="fas fa-calendar"></i> Submitted</th>
+                            <th><i class="fas fa-camera"></i> Photo</th>
+                            <th><i class="fas fa-cog"></i> Actions</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody">
-                        <tr><td colspan="7" class="loading-cell">Loading applications...</td><th>
+                        <tr><td colspan="7" class="loading-cell">Loading applications...</td><tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <div id="detailModal" class="premium-modal">
-        <div class="modal-content-premium">
-            <div class="modal-header-premium">
+    <!-- Footer -->
+    <footer class="admin-footer">
+        <p>© 2024 Embassy of Ireland - Official Registration System</p>
+        <p class="security"><i class="fas fa-shield-alt"></i> Secure & Encrypted</p>
+    </footer>
+
+    <!-- Modal -->
+    <div id="detailModal" class="modal-modern">
+        <div class="modal-content-modern">
+            <div class="modal-header-modern">
                 <h3><i class="fas fa-file-alt"></i> Application Details</h3>
                 <span class="close-modal">&times;</span>
             </div>
-            <div class="modal-body-premium" id="modalBody"></div>
+            <div class="modal-body-modern" id="modalBody"></div>
         </div>
     </div>
-
-    <footer class="admin-footer-premium">
-        <p>© 2024 Embassy of Ireland - Official Registration System</p>
-    </footer>
 
     <script src="script.js"></script>
 </body>
