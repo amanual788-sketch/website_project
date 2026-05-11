@@ -47,7 +47,7 @@ if (namePlaceholder && fullNameField) {
 }
 
 // ============================================
-// SHOW MESSAGE FUNCTION
+// SHOW MESSAGE FUNCTION - AT BOTTOM
 // ============================================
 function showMessage(message, type) {
     const msgDiv = document.getElementById('message');
@@ -56,11 +56,16 @@ function showMessage(message, type) {
     msgDiv.textContent = message;
     msgDiv.className = `message-toast ${type}`;
     msgDiv.style.display = 'block';
+    msgDiv.style.position = 'fixed';
+    msgDiv.style.bottom = '30px';
+    msgDiv.style.left = '50%';
+    msgDiv.style.transform = 'translateX(-50%)';
+    msgDiv.style.zIndex = '9999';
     
-    // Hide after 8 seconds
+    // Hide after 5 seconds
     setTimeout(() => {
         msgDiv.style.display = 'none';
-    }, 8000);
+    }, 5000);
 }
 
 // ============================================
@@ -108,21 +113,21 @@ if (form) {
         
         const declaration = document.getElementById('declarationCheckbox');
         if (!declaration || !declaration.checked) {
-            showMessage('Please confirm the declaration', 'error');
+            showMessage('⚠️ Please confirm the declaration', 'error');
             submitBtn.innerHTML = originalBtnText;
             submitBtn.disabled = false;
             return;
         }
         
         if (!formData.applicant.fullName) {
-            showMessage('Please enter your full name', 'error');
+            showMessage('⚠️ Please enter your full name', 'error');
             submitBtn.innerHTML = originalBtnText;
             submitBtn.disabled = false;
             return;
         }
         
         if (!formData.applicant.phone) {
-            showMessage('Please enter your phone number', 'error');
+            showMessage('⚠️ Please enter your phone number', 'error');
             submitBtn.innerHTML = originalBtnText;
             submitBtn.disabled = false;
             return;
@@ -143,10 +148,8 @@ if (form) {
             const result = await response.json();
             
             if (response.ok && result.success) {
-                // SUCCESS MESSAGE
                 showMessage('✅ Registration Successful!', 'success');
                 
-                // Reset form
                 form.reset();
                 if (photoInput) photoInput.value = '';
                 if (photoPlaceholder) photoPlaceholder.style.display = 'flex';
@@ -154,10 +157,10 @@ if (form) {
                 if (namePlaceholder) namePlaceholder.value = '';
                 
             } else {
-                showMessage('Submission failed: ' + (result.error || 'Unknown error'), 'error');
+                showMessage('❌ Submission failed: ' + (result.error || 'Unknown error'), 'error');
             }
         } catch (error) {
-            showMessage('Network error. Please try again.', 'error');
+            showMessage('❌ Network error. Please try again.', 'error');
         } finally {
             submitBtn.innerHTML = originalBtnText;
             submitBtn.disabled = false;
@@ -188,7 +191,7 @@ function displayApplications(data) {
     if (!tbody) return;
     
     if (data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" class="loading-cell">No applications found</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" class="loading-cell">No applications found</td><tr';
         return;
     }
     
