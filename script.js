@@ -49,76 +49,62 @@ if (namePlaceholder && fullNameField) {
 // ============================================
 // AMHARIC SUCCESS NOTIFICATION (FIXED)
 // ============================================
+// ============================================
+// FULL SCREEN NOTIFICATION - LIKE YOUR IMAGE
+// ============================================
+
 function showAmharicSuccess() {
-    let container = document.querySelector('.notification-container');
-    if (!container) {
-        container = document.createElement('div');
-        container.className = 'notification-container';
-        document.body.appendChild(container);
-    }
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'notification-overlay';
     
+    // Create notification card
     const notification = document.createElement('div');
-    notification.className = 'notification success';
+    notification.className = 'notification-fullscreen';
     
     notification.innerHTML = `
-        <div class="notification-icon">
+        <div class="icon">
             <i class="fas fa-check-circle"></i>
         </div>
-        <div class="notification-content">
-            <div class="notification-title">እንኳን ደስ አለዎት!</div>
-            <div class="notification-message">ምዝገባዎ በሚገባ ተመዝግቧል</div>
-        </div>
-        <div class="notification-close">
-            <i class="fas fa-times"></i>
-        </div>
+        <h2>እንኳን ደስ አለዎት!</h2>
+        <p>ምዝገባዎ በሚገባ ተመዝግቧል</p>
+        <button class="close-btn" onclick="this.closest('.notification-overlay').remove()">ዝጋ</button>
     `;
     
-    container.appendChild(notification);
+    overlay.appendChild(notification);
+    document.body.appendChild(overlay);
     
+    // Auto close after 5 seconds
     setTimeout(() => {
-        if (notification) notification.remove();
+        if (overlay) overlay.remove();
     }, 5000);
-    
-    const closeBtn = notification.querySelector('.notification-close');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => notification.remove());
-    }
 }
 
 function showError(message) {
-    let container = document.querySelector('.notification-container');
-    if (!container) {
-        container = document.createElement('div');
-        container.className = 'notification-container';
-        document.body.appendChild(container);
-    }
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'notification-overlay';
     
+    // Create notification card
     const notification = document.createElement('div');
-    notification.className = 'notification error';
+    notification.className = 'notification-fullscreen error';
     
     notification.innerHTML = `
-        <div class="notification-icon">
+        <div class="icon">
             <i class="fas fa-exclamation-circle"></i>
         </div>
-        <div class="notification-content">
-            <div class="notification-title">ስህተት!</div>
-            <div class="notification-message">${message}</div>
-        </div>
-        <div class="notification-close">
-            <i class="fas fa-times"></i>
-        </div>
+        <h2>ስህተት!</h2>
+        <p>${message}</p>
+        <button class="close-btn" onclick="this.closest('.notification-overlay').remove()">ዝጋ</button>
     `;
     
-    container.appendChild(notification);
+    overlay.appendChild(notification);
+    document.body.appendChild(overlay);
     
+    // Auto close after 5 seconds
     setTimeout(() => {
-        if (notification) notification.remove();
+        if (overlay) overlay.remove();
     }, 5000);
-    
-    const closeBtn = notification.querySelector('.notification-close');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => notification.remove());
-    }
 }
 
 // ============================================
