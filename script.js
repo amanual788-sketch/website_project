@@ -47,10 +47,9 @@ if (namePlaceholder && fullNameField) {
 }
 
 // ============================================
-// MODERN NOTIFICATION FUNCTION (BOTTOM RIGHT)
+// AMHARIC SUCCESS NOTIFICATION (FIXED)
 // ============================================
-function showNotification(title, message, type) {
-    // Create container if not exists
+function showAmharicSuccess() {
     let container = document.querySelector('.notification-container');
     if (!container) {
         container = document.createElement('div');
@@ -58,16 +57,51 @@ function showNotification(title, message, type) {
         document.body.appendChild(container);
     }
     
-    // Create notification element
     const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
+    notification.className = 'notification success';
     
     notification.innerHTML = `
         <div class="notification-icon">
-            <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+            <i class="fas fa-check-circle"></i>
         </div>
         <div class="notification-content">
-            <div class="notification-title">${title}</div>
+            <div class="notification-title">እንኳን ደስ አለዎት!</div>
+            <div class="notification-message">ምዝገባዎ በሚገባ ተመዝግቧል</div>
+        </div>
+        <div class="notification-close">
+            <i class="fas fa-times"></i>
+        </div>
+    `;
+    
+    container.appendChild(notification);
+    
+    setTimeout(() => {
+        if (notification) notification.remove();
+    }, 5000);
+    
+    const closeBtn = notification.querySelector('.notification-close');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => notification.remove());
+    }
+}
+
+function showError(message) {
+    let container = document.querySelector('.notification-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'notification-container';
+        document.body.appendChild(container);
+    }
+    
+    const notification = document.createElement('div');
+    notification.className = 'notification error';
+    
+    notification.innerHTML = `
+        <div class="notification-icon">
+            <i class="fas fa-exclamation-circle"></i>
+        </div>
+        <div class="notification-content">
+            <div class="notification-title">ስህተት!</div>
             <div class="notification-message">${message}</div>
         </div>
         <div class="notification-close">
@@ -77,30 +111,18 @@ function showNotification(title, message, type) {
     
     container.appendChild(notification);
     
-    // Auto remove after 5 seconds
     setTimeout(() => {
-        if (notification) {
-            notification.style.animation = 'fadeOutRight 0.3s ease';
-            setTimeout(() => {
-                if (notification && notification.remove) notification.remove();
-            }, 300);
-        }
+        if (notification) notification.remove();
     }, 5000);
     
-    // Close button functionality
     const closeBtn = notification.querySelector('.notification-close');
     if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-            notification.style.animation = 'fadeOutRight 0.3s ease';
-            setTimeout(() => {
-                if (notification && notification.remove) notification.remove();
-            }, 300);
-        });
+        closeBtn.addEventListener('click', () => notification.remove());
     }
 }
 
 // ============================================
-// FORM SUBMISSION - UPDATED WITH MODERN NOTIFICATION
+// FORM SUBMISSION - FIXED
 // ============================================
 const form = document.getElementById('registrationForm');
 if (form) {
@@ -109,7 +131,7 @@ if (form) {
         
         const submitBtn = form.querySelector('button[type="submit"]');
         const originalBtnText = submitBtn.innerHTML;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> በመመዝገብ ላይ...';
         submitBtn.disabled = true;
         
         const formData = {
@@ -144,21 +166,21 @@ if (form) {
         
         const declaration = document.getElementById('declarationCheckbox');
         if (!declaration || !declaration.checked) {
-            showNotification('⚠️ Declaration Required', 'Please confirm the information is true and accurate', 'error');
+            showError('እባክዎ መረጃው ትክክል መሆኑን ያረጋግጡ');
             submitBtn.innerHTML = originalBtnText;
             submitBtn.disabled = false;
             return;
         }
         
         if (!formData.applicant.fullName) {
-            showNotification('⚠️ Missing Information', 'Please enter your full name', 'error');
+            showError('እባክዎ ሙሉ ስምዎን ያስገቡ');
             submitBtn.innerHTML = originalBtnText;
             submitBtn.disabled = false;
             return;
         }
         
         if (!formData.applicant.phone) {
-            showNotification('⚠️ Missing Information', 'Please enter your phone number', 'error');
+            showError('እባክዎ ስልክ ቁጥርዎን ያስገቡ');
             submitBtn.innerHTML = originalBtnText;
             submitBtn.disabled = false;
             return;
@@ -179,12 +201,8 @@ if (form) {
             const result = await response.json();
             
             if (response.ok && result.success) {
-                // MODERN SUCCESS NOTIFICATION AT BOTTOM
-                showNotification(
-                    '✅ Registration Successful!', 
-                    `Application ID: ${result.applicationId}`, 
-                    'success'
-                );
+                // SHOW ONLY AMHARIC SUCCESS MESSAGE
+                showAmharicSuccess();
                 
                 form.reset();
                 if (photoInput) photoInput.value = '';
@@ -193,11 +211,11 @@ if (form) {
                 if (namePlaceholder) namePlaceholder.value = '';
                 
             } else {
-                showNotification('❌ Submission Failed', result.error || 'Unknown error occurred', 'error');
+                showError('ምዝገባ አልተሳካም: ' + (result.error || 'እባክዎ እንደገና ይሞክሩ'));
             }
         } catch (error) {
             console.error('Error:', error);
-            showNotification('❌ Network Error', 'Please check your connection and try again', 'error');
+            showError('የኢንተርኔት ግንኙነት ችግር አለ። እባክዎ እንደገና ይሞክሩ');
         } finally {
             submitBtn.innerHTML = originalBtnText;
             submitBtn.disabled = false;
@@ -238,7 +256,7 @@ function displayApplications(data) {
     if (!tbody) return;
     
     if (data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" class="loading-cell">No applications found</td><tr';
+        tbody.innerHTML = '<tr><td colspan="7" class="loading-cell">No applications found</td><\/tr>';
         return;
     }
     
@@ -302,14 +320,14 @@ async function deleteApp(id) {
             const result = await response.json();
             
             if (result.success) {
-                showNotification('✅ Deleted Successfully', 'Application has been removed', 'success');
+                showAmharicSuccess();
                 loadApplications();
             } else {
-                showNotification('❌ Delete Failed', result.message || 'Unknown error', 'error');
+                showError('Delete failed: ' + (result.message || 'Unknown error'));
             }
         } catch (error) {
             console.error('Delete error:', error);
-            showNotification('❌ Network Error', 'Please try again', 'error');
+            showError('Network error. Please try again.');
         }
     }
 }
